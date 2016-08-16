@@ -9,8 +9,6 @@
 			var blocker = document.getElementById( 'blocker' );
 			var instructions = document.getElementById( 'instructions' );
 
-			// http://www.html5rocks.com/en/tutorials/pointerlock/intro/
-
 			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
 			if ( havePointerLock ) {
@@ -96,6 +94,12 @@
 
 			}
 
+			
+			var crosshairTexture = new THREE.ImageUtils.loadTexture("imports/crosshair.png");
+			var crosshairGeometry = new THREE.PlaneGeometry(5,5);	
+			var crosshairMaterial = new THREE.MeshPhongMaterial({map: crosshairTexture, transparent:true});
+			var crosshair = new THREE.Mesh(crosshairGeometry, crosshairMaterial);
+			crosshair.scale.set(0.5,0.5,0.5);
 			init();
 			animate();
 
@@ -119,29 +123,17 @@
 
 				ray = new THREE.Raycaster();
 				ray.ray.direction.set( 0, -1, 0 );
+				
+				
+				//crosshair.position.y = 1;
+				crosshair.position.z = -10.0;
+				camera.add(crosshair);
 
 				// floor
 
 				geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
 				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-				// for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-
-					// var vertex = geometry.vertices[ i ];
-					// vertex.x += Math.random() * 20 - 10;
-					// vertex.y += Math.random() * 2;
-					// vertex.z += Math.random() * 20 - 10;
-
-				// }
-
-				// for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-					// var face = geometry.faces[ i ];
-					// face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					// face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					// face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-				// }
 				var floorTex = THREE.ImageUtils.loadTexture("textures/stone.jpg");
 				floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
 				floorTex.repeat.set(200,200);
@@ -150,11 +142,6 @@
 				mesh = new THREE.Mesh( geometry, material );
 				scene.add( mesh );
 
-				// var floorTex = THREE.ImageUtils.loadTexture("textures/floor-pavement.jpg")
-				// var plane = new THREE.Mesh(new THREE.CubeGeometry(200, 100, 0.1, 30), new THREE.MeshPhongMaterial({color: 0x3c3c3c, map: floorTex}));
-				// plane.position.y = -7.5;
-				// plane.rotation.x = -0.5 * Math.PI;
-				// scene.add(plane);
 				
 				// objects
 
